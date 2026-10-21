@@ -1,0 +1,840 @@
+{
+  "info": {
+    "_postman_id": "8fd4ddfd-7c39-4c02-b756-9f4f90eea9d6",
+    "name": "AlmaSoft API Completa",
+    "description": "Coleccion completa para probar el backend AlmaSoft en http://localhost:3001. Incluye autenticacion, usuarios, roles, clientes, categorias, subcategorias, productos, planes, contrato de cliente, tienda, servicios, pagos y afiliados.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "adminToken", "value": "", "type": "string" },
+    { "key": "asesorToken", "value": "", "type": "string" },
+    { "key": "clienteToken", "value": "", "type": "string" },
+    { "key": "adminEmail", "value": "admin.almasoft@example.com", "type": "string" },
+    { "key": "adminPassword", "value": "Admin123!", "type": "string" },
+    { "key": "asesorEmail", "value": "asesor.almasoft@example.com", "type": "string" },
+    { "key": "asesorPassword", "value": "Asesor123!", "type": "string" },
+    { "key": "clienteEmail", "value": "cliente.almasoft@example.com", "type": "string" },
+    { "key": "clientePassword", "value": "Cliente123!", "type": "string" },
+    { "key": "adminId", "value": "1", "type": "string" },
+    { "key": "asesorId", "value": "2", "type": "string" },
+    { "key": "clienteId", "value": "3", "type": "string" },
+    { "key": "usuarioId", "value": "1", "type": "string" },
+    { "key": "documento", "value": "900200300", "type": "string" },
+    { "key": "categoriaId", "value": "1", "type": "string" },
+    { "key": "subcategoriaId", "value": "1", "type": "string" },
+    { "key": "productoId", "value": "1", "type": "string" },
+    { "key": "planId", "value": "1", "type": "string" },
+    { "key": "carritoId", "value": "1", "type": "string" },
+    { "key": "servicioId", "value": "1", "type": "string" },
+    { "key": "afiliadoId", "value": "4", "type": "string" },
+    { "key": "reviewRequestId", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "00 Salud",
+      "item": [
+        {
+          "name": "Backend raiz",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/"
+          }
+        },
+        {
+          "name": "Backend test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/test"
+          }
+        }
+      ]
+    },
+    {
+      "name": "01 Auth y Usuarios",
+      "item": [
+        {
+          "name": "Crear Administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.usuario_id) { pm.collectionVariables.set('adminId', json.data.usuario_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_primer_nombre\": \"Laura\",\n  \"usuario_segundo_nombre\": \"Isabel\",\n  \"usuario_primer_apellido\": \"Martinez\",\n  \"usuario_segundo_apellido\": \"Cruz\",\n  \"usuario_documento\": 900100300,\n  \"usuario_correo\": \"{{adminEmail}}\",\n  \"usuario_direccion\": \"Sede principal\",\n  \"usuario_credencial\": \"{{adminPassword}}\",\n  \"rol_id\": 3\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/usuarioCreate"
+          }
+        },
+        {
+          "name": "Login Administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('adminToken', json.token);",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "}",
+                  "if (json.usuario && json.usuario.usuario_id) { pm.collectionVariables.set('adminId', json.usuario.usuario_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_correo\": \"{{adminEmail}}\",\n  \"usuario_credencial\": \"{{adminPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/login"
+          }
+        },
+        {
+          "name": "Crear Asesor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.usuario_id) { pm.collectionVariables.set('asesorId', json.data.usuario_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_primer_nombre\": \"Ana\",\n  \"usuario_segundo_nombre\": \"Maria\",\n  \"usuario_primer_apellido\": \"Gomez\",\n  \"usuario_segundo_apellido\": \"Ruiz\",\n  \"usuario_documento\": {{documento}},\n  \"usuario_correo\": \"{{asesorEmail}}\",\n  \"usuario_direccion\": \"Oficina comercial\",\n  \"usuario_credencial\": \"{{asesorPassword}}\",\n  \"rol_id\": 2\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/usuarioCreate"
+          }
+        },
+        {
+          "name": "Login Asesor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('asesorToken', json.token);",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "}",
+                  "if (json.usuario && json.usuario.usuario_id) { pm.collectionVariables.set('asesorId', json.usuario.usuario_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_correo\": \"{{asesorEmail}}\",\n  \"usuario_credencial\": \"{{asesorPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/login"
+          }
+        },
+        {
+          "name": "Crear Cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.usuario_id) { pm.collectionVariables.set('clienteId', json.data.usuario_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_primer_nombre\": \"Carlos\",\n  \"usuario_segundo_nombre\": \"Daniel\",\n  \"usuario_primer_apellido\": \"Perez\",\n  \"usuario_segundo_apellido\": \"Lopez\",\n  \"usuario_documento\": 900200301,\n  \"usuario_correo\": \"{{clienteEmail}}\",\n  \"usuario_direccion\": \"Calle 123\",\n  \"usuario_credencial\": \"{{clientePassword}}\",\n  \"rol_id\": 1,\n  \"cliente_fecha_nacimiento\": \"1990-05-06\",\n  \"usuario_telefono\": 3001234567\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/usuarioCreate"
+          }
+        },
+        {
+          "name": "Login Cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('clienteToken', json.token);",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "}",
+                  "if (json.usuario && json.usuario.usuario_id) { pm.collectionVariables.set('clienteId', json.usuario.usuario_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_correo\": \"{{clienteEmail}}\",\n  \"usuario_credencial\": \"{{clientePassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/login"
+          }
+        },
+        {
+          "name": "Listar Usuarios",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/usuarios/usuariosAll"
+          }
+        },
+        {
+          "name": "Usuario por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/usuarios/id/{{usuarioId}}"
+          }
+        },
+        {
+          "name": "Usuario por Documento",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/usuarios/documento/{{documento}}"
+          }
+        },
+        {
+          "name": "Actualizar Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_primer_nombre\": \"Nombre Editado\",\n  \"usuario_segundo_nombre\": \"Segundo\",\n  \"usuario_primer_apellido\": \"Apellido\",\n  \"usuario_segundo_apellido\": \"Editado\",\n  \"usuario_correo\": \"editado@example.com\",\n  \"usuario_direccion\": \"Direccion editada\"\n}"
+            },
+            "url": "{{baseUrl}}/api/usuarios/update/{{usuarioId}}"
+          }
+        },
+        {
+          "name": "Eliminar Usuario",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/usuarios/deleteU/{{usuarioId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Roles",
+      "item": [
+        {
+          "name": "Crear Rol",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"rol_id\": null,\n  \"rol_nombre\": \"Afiliado\"\n}" },
+            "url": "{{baseUrl}}/api/rol/createRol"
+          }
+        },
+        {
+          "name": "Listar Roles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/rol/Roles"
+          }
+        },
+        {
+          "name": "Rol por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/rol/rol/1"
+          }
+        },
+        {
+          "name": "Eliminar Rol",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/rol/delete/4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Clientes",
+      "item": [
+        {
+          "name": "Listar Clientes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/clientes/clientesAll"
+          }
+        },
+        {
+          "name": "Cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/clientes/id/{{clienteId}}"
+          }
+        },
+        {
+          "name": "Estadisticas Clientes con Planes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/clientes/stats/planes"
+          }
+        },
+        {
+          "name": "Crear Cliente desde Asesor/Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) { pm.collectionVariables.set('clienteId', json.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documento\": 900200302,\n  \"primer_nombre\": \"Marta\",\n  \"segundo_nombre\": \"Lucia\",\n  \"primer_apellido\": \"Rojas\",\n  \"segundo_apellido\": \"Diaz\",\n  \"correo\": \"cliente.asesor@example.com\",\n  \"direccion\": \"Carrera 45\",\n  \"credencial\": \"Cliente123!\",\n  \"fecha_nacimiento\": \"06/05/1990\",\n  \"edad\": 35,\n  \"telefono\": 3005556677\n}"
+            },
+            "url": "{{baseUrl}}/api/clientes/"
+          }
+        },
+        {
+          "name": "Actualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"primer_nombre\": \"Marta\",\n  \"segundo_nombre\": \"Lucia\",\n  \"primer_apellido\": \"Rojas\",\n  \"segundo_apellido\": \"Actualizado\",\n  \"correo\": \"cliente.asesor@example.com\",\n  \"direccion\": \"Carrera 45 actualizada\",\n  \"fecha_nacimiento\": \"06/05/1990\",\n  \"edad\": 35\n}"
+            },
+            "url": "{{baseUrl}}/api/clientes/{{clienteId}}"
+          }
+        },
+        {
+          "name": "Eliminar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/clientes/{{clienteId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Categorias y Subcategorias",
+      "item": [
+        {
+          "name": "Crear Categoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"categoria_id\": null,\n  \"categoria_nombre\": \"Categoria Postman\"\n}" },
+            "url": "{{baseUrl}}/api/categorias/crear"
+          }
+        },
+        {
+          "name": "Listar Categorias",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/categorias"
+          }
+        },
+        {
+          "name": "Categoria por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/categorias/{{categoriaId}}"
+          }
+        },
+        {
+          "name": "Actualizar Categoria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"categoria_nombre\": \"Categoria Editada\"\n}" },
+            "url": "{{baseUrl}}/api/categorias/update/{{categoriaId}}"
+          }
+        },
+        {
+          "name": "Eliminar Categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/categorias/delete/{{categoriaId}}"
+          }
+        },
+        {
+          "name": "Crear Subcategoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"subcategoria_id\": null,\n  \"subcategoria_nombre\": \"Subcategoria Postman\",\n  \"categoria_id\": {{categoriaId}}\n}" },
+            "url": "{{baseUrl}}/api/subcategorias/createSubC"
+          }
+        },
+        {
+          "name": "Listar Subcategorias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/subcategorias/subCAll"
+          }
+        },
+        {
+          "name": "Subcategoria por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/subcategorias/subCId/{{subcategoriaId}}"
+          }
+        },
+        {
+          "name": "Actualizar Subcategoria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"subcategoria_id\": {{subcategoriaId}},\n  \"subcategoria_nombre\": \"Subcategoria Editada\",\n  \"categoria_id\": {{categoriaId}}\n}" },
+            "url": "{{baseUrl}}/api/subcategorias/updateSubC/{{subcategoriaId}}"
+          }
+        },
+        {
+          "name": "Eliminar Subcategoria",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/subcategorias/deleteSubC/{{subcategoriaId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Productos",
+      "item": [
+        {
+          "name": "Crear Producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto_nombre\": \"Producto Postman\",\n  \"producto_descripcion\": \"Producto creado desde Postman\",\n  \"producto_precio\": 50000,\n  \"producto_stock\": 10,\n  \"producto_estado\": 1,\n  \"subcategoria_id\": {{subcategoriaId}},\n  \"producto_imagen\": \"/img/img_default.png\"\n}"
+            },
+            "url": "{{baseUrl}}/api/productos/createProducto"
+          }
+        },
+        {
+          "name": "Listar Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/productos/productosAll"
+          }
+        },
+        {
+          "name": "Producto por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/productos/producto/{{productoId}}"
+          }
+        },
+        {
+          "name": "Filtrar Productos por Nombre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/productos/filtrar?nombre=ataud"
+          }
+        },
+        {
+          "name": "Actualizar Producto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto_nombre\": \"Producto Editado\",\n  \"producto_descripcion\": \"Descripcion editada\",\n  \"producto_precio\": 65000,\n  \"producto_stock\": 8,\n  \"producto_estado\": 1,\n  \"subcategoria_id\": {{subcategoriaId}},\n  \"producto_imagen\": \"/img/img_default.png\"\n}"
+            },
+            "url": "{{baseUrl}}/api/productos/updateProducto/{{productoId}}"
+          }
+        },
+        {
+          "name": "Eliminar Producto",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/productos/deleteProducto/{{productoId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Planes",
+      "item": [
+        {
+          "name": "Crear Plan Funebre",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"plan_nombre\": \"Plan Postman\",\n  \"plan_descripcion\": \"Plan creado desde Postman\",\n  \"plan_precio\": 120000,\n  \"plan_estado\": 1\n}" },
+            "url": "{{baseUrl}}/api/planes/crear"
+          }
+        },
+        {
+          "name": "Listar Planes Admin/Asesor",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/planes"
+          }
+        },
+        {
+          "name": "Plan por ID Admin/Asesor",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/planes/{{planId}}"
+          }
+        },
+        {
+          "name": "Actualizar Plan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"plan_id\": {{planId}},\n  \"plan_nombre\": \"Plan Editado\",\n  \"plan_descripcion\": \"Plan editado desde Postman\",\n  \"plan_precio\": 130000,\n  \"plan_estado\": 1\n}" },
+            "url": "{{baseUrl}}/api/planes/update/{{planId}}"
+          }
+        },
+        {
+          "name": "Eliminar Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/planes/delete/{{planId}}"
+          }
+        },
+        {
+          "name": "Planes Publicos para Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/client/plans"
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Cliente Contrato",
+      "item": [
+        {
+          "name": "Mi Plan",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/contrato/mine"
+          }
+        },
+        {
+          "name": "Planes Disponibles para Contrato",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/contrato/planes"
+          }
+        },
+        {
+          "name": "Adquirir Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{clienteToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"cliente_id\": {{clienteId}},\n  \"plan_id\": {{planId}},\n  \"metodo_pago\": \"Efectivo\"\n}" },
+            "url": "{{baseUrl}}/api/client/contrato"
+          }
+        },
+        {
+          "name": "Mejorar Plan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{clienteToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"plan_id\": 2,\n  \"metodo_pago\": \"Tarjeta\"\n}" },
+            "url": "{{baseUrl}}/api/client/contrato/mejorar"
+          }
+        },
+        {
+          "name": "Cancelar Plan",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/contrato/cancelar"
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Tienda, Servicios y Pagos",
+      "item": [
+        {
+          "name": "Productos Tienda Publico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/client/store/productos"
+          }
+        },
+        {
+          "name": "Ver Carrito",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/store/carrito"
+          }
+        },
+        {
+          "name": "Agregar Producto al Carrito",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{clienteToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"producto_id\": {{productoId}},\n  \"cantidad\": 1\n}" },
+            "url": "{{baseUrl}}/api/client/store/carrito"
+          }
+        },
+        {
+          "name": "Pagar Carrito",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{clienteToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"metodo_pago\": \"Efectivo\"\n}" },
+            "url": "{{baseUrl}}/api/client/store/carrito/checkout"
+          }
+        },
+        {
+          "name": "Eliminar Item Carrito",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/store/carrito/{{carritoId}}"
+          }
+        },
+        {
+          "name": "Listar Servicios",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/client/store/servicios"
+          }
+        },
+        {
+          "name": "Solicitar Servicio",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{clienteToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"servicio_id\": {{servicioId}},\n  \"metodo_pago\": \"Transferencia\"\n}" },
+            "url": "{{baseUrl}}/api/client/store/servicios/solicitar"
+          }
+        },
+        {
+          "name": "Historial de Pagos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/store/pagos/historial"
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Afiliados",
+      "item": [
+        {
+          "name": "Dashboard Afiliados",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/affiliates/dashboard"
+          }
+        },
+        {
+          "name": "Buscar Candidatos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/affiliates/candidates?q=900"
+          }
+        },
+        {
+          "name": "Solicitar/Vincular Afiliado",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{clienteToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"usuario_postulado_id\": {{afiliadoId}},\n  \"parentesco\": \"Hermano\",\n  \"observacion\": \"Solicitud creada desde Postman\"\n}" },
+            "url": "{{baseUrl}}/api/client/affiliates/request"
+          }
+        },
+        {
+          "name": "Eliminar Afiliado",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/affiliates/remove/{{afiliadoId}}"
+          }
+        },
+        {
+          "name": "Marcar Notificaciones Leidas",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clienteToken}}" }],
+            "url": "{{baseUrl}}/api/client/affiliates/notifications/read"
+          }
+        },
+        {
+          "name": "Solicitudes para Revision",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/client/affiliates/review"
+          }
+        },
+        {
+          "name": "Revisar Solicitud",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"aprobada\",\n  \"observacion\": \"Aprobado desde Postman\"\n}" },
+            "url": "{{baseUrl}}/api/client/affiliates/review/{{reviewRequestId}}"
+          }
+        },
+        {
+          "name": "Registrar Afiliado por Asesor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{asesorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente_id\": {{clienteId}},\n  \"documento\": 900300400,\n  \"primer_nombre\": \"Felipe\",\n  \"segundo_nombre\": \"Andres\",\n  \"primer_apellido\": \"Morales\",\n  \"segundo_apellido\": \"Soto\",\n  \"correo\": \"afiliado.postman@example.com\",\n  \"telefono\": 3007778899\n}"
+            },
+            "url": "{{baseUrl}}/api/client/affiliates/register-by-asesor"
+          }
+        },
+        {
+          "name": "Listar Afiliados para Asesor",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{asesorToken}}" }],
+            "url": "{{baseUrl}}/api/client/affiliates/all-for-asesor"
+          }
+        }
+      ]
+    }
+  ]
+}

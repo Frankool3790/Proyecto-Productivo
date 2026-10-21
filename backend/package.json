@@ -1,0 +1,31 @@
+{
+  "name": "foodtrans-nqr-backend",
+  "version": "1.0.0",
+  "description": "API REST para FoodTrans NQR",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "check": "node --check index.js && node --check server.js",
+    "test": "npm run check",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "NodeJs"
+  ],
+  "author": "Estefani Torres",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.24.6",
+    "nodemailer": "^8.0.6",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1"
+  }
+}

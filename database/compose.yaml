@@ -1,0 +1,26 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: foodtrans-nqr-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-foodtrans_nqr}
+      MYSQL_USER: ${MYSQL_USER:-foodtrans}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-foodtrans_dev}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_dev_only}
+    ports:
+      - "${MYSQL_PORT:-3308}:3306"
+    volumes:
+      - foodtrans_mysql_data:/var/lib/mysql
+      - ./foodtrans_nqr_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./foodtrans_nqr_seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./foodtrans_nqr_auth_movements.sql:/docker-entrypoint-initdb.d/03-auth-movements.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  foodtrans_mysql_data:
